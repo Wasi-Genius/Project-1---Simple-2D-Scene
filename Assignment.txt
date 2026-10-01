@@ -1,0 +1,69 @@
+NYU Tandon School of Engineering
+CS-UY 3113 Fall 2026
+Project 1: Simple 2D Scene
+Due: Monday, Oct 5th, 11:59PM
+Submission instructions
+You must use delta time in your animations. 
+
+You should submit your homework on Brightspace. 
+
+You should also push that same version to your GitHub account. Note that any commits done after the deadline will be ignored. 
+
+Just submit your github link with all your files within your project 
+
+Do not use any Raylib functionality that we have not learned in class. 
+
+The main.cpp file you submit should contain a header comment block as follows:
+
+/**
+
+* Author: [Your name here]
+
+* Assignment: Pong Clone
+
+* Date due: [mm/dd/yyyy]
+
+* I pledge that I have completed this assignment without
+
+* collaborating with anyone else, in conformance with the
+
+* NYU School of Engineering Policies and Procedures on
+
+* Academic Misconduct.
+
+**/
+
+
+No late submissions will be accepted.
+
+Requirement 1: At Least Three Objects
+There needs to be at least three different “objects” in the scene. 
+
+Each object must use a different texture. These textures must not be solid colours, but images. You may use any images that you like that we have not used in class.
+
+Requirement 2: Relative Position 
+At least one of your objects must be transforming in relation to another object.
+
+Requirement 3: Transformations
+Have every one of your objects translate in a pattern other than up and down or left and right. 
+
+Each object must translate in a slightly different pattern. 
+
+You may use orbiting from our first classwork project as one of your patterns. 
+
+At least one of your objects must be rotating. 
+
+At least one of your objects must be scaling.
+
+Tips
+Go to the TA's office if you need help setting up your environment.
+
+Add a theme to your scene! It’s a lot more fun to work on something that involves things that you like than if it’s just random objects floating around.
+
+Extra Credit
+Have the game's background color also change in some sort of pattern.
+
+Submit
+Please push your code to GitHub repo and submit the link to your GitHub repo.
+
+Please make sure that it is a public repo and clearly indicate which is your project folder and which is your project 1.
