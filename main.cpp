@@ -16,6 +16,13 @@
 
 **/
 
+/*
+- The Sun Will be Scaling and moving in a up and down wave pattern and back and forth along the x-axis.
+- The moon will move in relative position to the sun.
+- - The moon will be doing the orbiting around the sun.
+- The verity will be zig zagging around the screen and rotating.
+*/
+
 #include "CS3113/cs3113.h"
 #include "math.h"
 
@@ -98,13 +105,19 @@ void update()
 
     gPrevTicks = ticks;
 
-    gSunPulseTime += 5.0f * deltaTime;
+    gSunPulseTime += 2.0f * deltaTime;
     gMoonPulseTime += 5.0f * deltaTime;
     gVerityPulseTime += 5.0f * deltaTime;
 
+    // Sun Pulsing Affect
     gSunScale = {
         BASE_SIZE.x + MAX_AMP * cos(gSunPulseTime),
         BASE_SIZE.y + MAX_AMP * cos(gSunPulseTime)};
+
+    // Sun Translation Affect (Moving up and down in a curve along the x-axis)
+    gSunPosition.x = ORIGIN.x + 550.0f * sin(gSunPulseTime);
+
+    gSunPosition.y = ORIGIN.y + MAX_AMP * sin((gSunPosition.x - ORIGIN.x) / 70.0f);
 
     gMoonScale = {
         BASE_SIZE.x + MAX_AMP * cos(gMoonPulseTime),
