@@ -17,7 +17,11 @@
 **/
 
 /*
+
+Completed:
 - The Sun Will be Scaling and moving in a up and down wave pattern and back and forth along the x-axis.
+
+To-Do:
 - The moon will move in relative position to the sun.
 - - The moon will be doing the orbiting around the sun.
 - The verity will be zig zagging around the screen and rotating.
@@ -59,7 +63,7 @@ float gSunPulseTime = 0.0f;
 // Moon Texture Info
 Texture2D gMoonTexture;
 Vector2 gMoonPosition = {(SCREEN_WIDTH / 2.0f) + 500.0f, SCREEN_HEIGHT / 2.0f};
-Vector2 gMoonScale = BASE_SIZE;
+Vector2 gMoonScale = {250.0f, 250.0f};
 float gMoonAngle = 0.0f;
 float gMoonPulseTime = 0.0f;
 
@@ -106,8 +110,8 @@ void update()
     gPrevTicks = ticks;
 
     gSunPulseTime += 2.0f * deltaTime;
-    gMoonPulseTime += 5.0f * deltaTime;
-    gVerityPulseTime += 5.0f * deltaTime;
+    gMoonPulseTime += 3.0f * deltaTime;
+    gVerityPulseTime += 3.0f * deltaTime;
 
     // Sun Pulsing Affect
     gSunScale = {
@@ -116,16 +120,13 @@ void update()
 
     // Sun Translation Affect (Moving up and down in a curve along the x-axis)
     gSunPosition.x = ORIGIN.x + 550.0f * sin(gSunPulseTime);
-
     gSunPosition.y = ORIGIN.y + MAX_AMP * sin((gSunPosition.x - ORIGIN.x) / 70.0f);
 
-    gMoonScale = {
-        BASE_SIZE.x + MAX_AMP * cos(gMoonPulseTime),
-        BASE_SIZE.y + MAX_AMP * cos(gMoonPulseTime)};
+    // Moon orbiting around the sun
+    gMoonPosition.x = gSunPosition.x + 300.0f * cos(gMoonPulseTime);
+    gMoonPosition.y = gSunPosition.y + 300.0f * sin(gMoonPulseTime);
 
-    gVerityScale = {
-        BASE_SIZE.x + MAX_AMP * cos(gVerityPulseTime),
-        BASE_SIZE.y + MAX_AMP * cos(gVerityPulseTime)};
+    gVerityAngle += gVerityPulseTime; 
 }
 
 void render()
