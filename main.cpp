@@ -16,66 +16,67 @@
 
 **/
 
-// Includes the course's raylib helper definitions, such as AppStatus and ColorFromHex.
 #include "CS3113/cs3113.h"
 #include "math.h"
 
-// Global constants are values shared throughout this file that do not change while the game runs.
-// constexpr asks C++ to determine these values at compile time when possible.
 constexpr int SCREEN_WIDTH = 1600,
               SCREEN_HEIGHT = 900,
               FPS = 60;
 
-// The background color is written as a hexadecimal color string and converted by ColorFromHex().
+
 constexpr char BG_COLOUR[] = "#B2AAC6";
 
-// Global variables hold state that multiple game functions need to read or change.
-// RUNNING and TERMINATED are status values supplied by the course helper library.
 AppStatus gAppStatus = RUNNING;
 
-// The image file loaded as the sprite. The path is relative to the program's working directory.
-constexpr char Verity[] = "verity.png";
+//Sun Image 
+constexpr char Sun[] = "assets/sun.png";
 
-// Vector2 is raylib's two-number type, commonly used for positions and sizes.
-// ORIGIN is the center point of the window; dividing by 2.0f makes floating-point coordinates.
+//Moon Image 
+constexpr char Moon[] = "assets/moon.png";
+
+// Verity image
+constexpr char Verity[] = "assets/verity.png";
+
 constexpr Vector2 ORIGIN = {SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f};
 
 // The texture starts at this width and height, measured in screen pixels when drawn.
 constexpr Vector2 BASE_SIZE = {500.0f, 500.0f};
 
+
+// Sun Texture Info
 // Texture2D stores the image data raylib needs to draw a texture.
-// It is filled in initialise() after the graphics window exists.
-Texture2D gTexture;
+Texture2D gSunTexture;
+Vector2 gSunPosition = ORIGIN; 
+Vector2 gSunScale = BASE_SIZE;
+float gSunAngle = 0.0f; 
+float gSunPulseTime = 0.0f; 
 
-// These values describe the sprite's current drawing position and size.
-// Starting at ORIGIN and BASE_SIZE gives the sprite its initial placement and dimensions.
-Vector2 gPosition = ORIGIN;
-Vector2 gScale = BASE_SIZE;
+// Moon Texture Info
+Texture2D gMoonTexture;
+Vector2 gMoonPosition = ORIGIN;
+Vector2 gMoonScale = BASE_SIZE;
+float gMoonAngle = 0.0f;
+float gMoonPulseTime = 0.0f;
 
-// DrawTexturePro() uses this angle in degrees. Zero means no rotation.
-constexpr float gAngle = 0.0f;
+// Verity Texture Info
+Texture2D gVerityTexture;
+Vector2 gVerityPosition = ORIGIN;
+Vector2 gVerityScale = BASE_SIZE;
+float gVerityAngle = 0.0f;
+float gVerityPulseTime = 0.0f;
 
-// gPulseTime is the animation's running phase, measured in radians for cos().
-float gPulseTime = 0.0f;
-
-// The maximum amount added to or subtracted from the base width and height.
 float MAX_AMP = 100.0f;
 
-// Stores the previous GetTime() result so update() can calculate time between frames.
 float gPrevTicks = 0.0f;
 
-// Function declarations tell the compiler these functions exist before their definitions below.
-// Keeping the game loop split into stages makes input, simulation, drawing, and cleanup easier to follow.
 void initialise();
 void processInput();
 void update();
 void render();
 void shutdown();
 
-// Set up the window and graphics resources before entering the game loop.
 void initialise()
 {
-    // Create the raylib window. Drawing and input happen through this window.
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Textures & Delta Time");
 
     // Load the image from disk into a GPU-ready raylib texture.
