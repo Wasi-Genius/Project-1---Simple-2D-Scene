@@ -130,6 +130,8 @@ void update()
     gVerityAngle += gVerityPulseTime * 0.03f;
 
     // Verity motion
+    gVerityPosition.x = ORIGIN.x + 400.0f * sin(gVerityPulseTime);
+    gVerityPosition.y = ORIGIN.y + 400.0f * sin(gVerityPulseTime);
 }
 
 void render()
@@ -188,6 +190,14 @@ void render()
         static_cast<float>(gVerityScale.y) / 2.0f};
 
     // Draw the images onto the screen
+    
+    DrawTexturePro(
+        gVerityTexture,
+        textureVerityArea,
+        destinationVerityArea,
+        originVerityOffset,
+        gVerityAngle,
+        WHITE);
 
     DrawTexturePro(
         gSunTexture,
@@ -203,14 +213,6 @@ void render()
         destinationMoonArea,
         originMoonOffset,
         gMoonAngle,
-        WHITE);
-
-    DrawTexturePro(
-        gVerityTexture,
-        textureVerityArea,
-        destinationVerityArea,
-        originVerityOffset,
-        gVerityAngle,
         WHITE);
 
     EndDrawing();
