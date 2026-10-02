@@ -69,8 +69,8 @@ float gMoonPulseTime = 0.0f;
 
 // Verity Texture Info
 Texture2D gVerityTexture;
-Vector2 gVerityPosition = {(SCREEN_WIDTH / 2.0f) - 500.0f, SCREEN_HEIGHT / 2.0f};
-Vector2 gVerityScale = BASE_SIZE;
+Vector2 gVerityPosition = {(SCREEN_WIDTH / 2.0f) - 500.0f, (SCREEN_HEIGHT / 2.0f) - 200.0f};
+Vector2 gVerityScale = {150.0f, 150.0f};
 float gVerityAngle = 0.0f;
 float gVerityPulseTime = 0.0f;
 
@@ -123,10 +123,13 @@ void update()
     gSunPosition.y = ORIGIN.y + MAX_AMP * sin((gSunPosition.x - ORIGIN.x) / 70.0f);
 
     // Moon orbiting around the sun
-    gMoonPosition.x = gSunPosition.x + 300.0f * cos(gMoonPulseTime);
-    gMoonPosition.y = gSunPosition.y + 300.0f * sin(gMoonPulseTime);
+    gMoonPosition.x = gSunPosition.x + 350.0f * cos(gMoonPulseTime);
+    gMoonPosition.y = gSunPosition.y + 350.0f * sin(gMoonPulseTime);
 
-    gVerityAngle += gVerityPulseTime; 
+    // Verity rotating
+    gVerityAngle += gVerityPulseTime * 0.03f;
+
+    // Verity motion
 }
 
 void render()
@@ -172,9 +175,17 @@ void render()
         static_cast<float>(gVerityScale.x),
         static_cast<float>(gVerityScale.y)};
 
-    Vector2 originOffset = {
+    Vector2 originSunOffset = {
         static_cast<float>(gSunScale.x) / 2.0f,
         static_cast<float>(gSunScale.y) / 2.0f};
+
+    Vector2 originMoonOffset = {
+        static_cast<float>(gMoonScale.x) / 2.0f,
+        static_cast<float>(gMoonScale.y) / 2.0f};
+
+    Vector2 originVerityOffset = {
+        static_cast<float>(gVerityScale.x) / 2.0f,
+        static_cast<float>(gVerityScale.y) / 2.0f};
 
     // Draw the images onto the screen
 
@@ -182,7 +193,7 @@ void render()
         gSunTexture,
         textureSunArea,
         destinationSunArea,
-        originOffset,
+        originSunOffset,
         gSunAngle,
         WHITE);
 
@@ -190,7 +201,7 @@ void render()
         gMoonTexture,
         textureMoonArea,
         destinationMoonArea,
-        originOffset,
+        originMoonOffset,
         gMoonAngle,
         WHITE);
 
@@ -198,7 +209,7 @@ void render()
         gVerityTexture,
         textureVerityArea,
         destinationVerityArea,
-        originOffset,
+        originVerityOffset,
         gVerityAngle,
         WHITE);
 
