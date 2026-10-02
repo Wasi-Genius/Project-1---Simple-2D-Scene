@@ -23,44 +23,42 @@ constexpr int SCREEN_WIDTH = 1600,
               SCREEN_HEIGHT = 900,
               FPS = 60;
 
-
 constexpr char BG_COLOUR[] = "#B2AAC6";
 
 AppStatus gAppStatus = RUNNING;
 
-//Sun Image 
+// Sun Image
 constexpr char Sun[] = "assets/sun.png";
 
-//Moon Image 
+// Moon Image
 constexpr char Moon[] = "assets/moon.png";
 
 // Verity image
 constexpr char Verity[] = "assets/verity.png";
 
-constexpr Vector2 ORIGIN = {SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f};
+Vector2 ORIGIN = {SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f};
 
 // The texture starts at this width and height, measured in screen pixels when drawn.
 constexpr Vector2 BASE_SIZE = {500.0f, 500.0f};
 
-
 // Sun Texture Info
 // Texture2D stores the image data raylib needs to draw a texture.
 Texture2D gSunTexture;
-Vector2 gSunPosition = ORIGIN; 
+Vector2 gSunPosition = ORIGIN;
 Vector2 gSunScale = BASE_SIZE;
-float gSunAngle = 0.0f; 
-float gSunPulseTime = 0.0f; 
+float gSunAngle = 0.0f;
+float gSunPulseTime = 0.0f;
 
 // Moon Texture Info
 Texture2D gMoonTexture;
-Vector2 gMoonPosition = ORIGIN;
+Vector2 gMoonPosition = {(SCREEN_WIDTH / 2.0f) + 500.0f, SCREEN_HEIGHT / 2.0f};
 Vector2 gMoonScale = BASE_SIZE;
 float gMoonAngle = 0.0f;
 float gMoonPulseTime = 0.0f;
 
 // Verity Texture Info
 Texture2D gVerityTexture;
-Vector2 gVerityPosition = ORIGIN;
+Vector2 gVerityPosition = {(SCREEN_WIDTH / 2.0f) - 500.0f, SCREEN_HEIGHT / 2.0f};
 Vector2 gVerityScale = BASE_SIZE;
 float gVerityAngle = 0.0f;
 float gVerityPulseTime = 0.0f;
@@ -79,120 +77,140 @@ void initialise()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Textures & Delta Time");
 
-    // Load the image from disk into a GPU-ready raylib texture.
-    gTexture = LoadTexture(Verity);
+    gSunTexture = LoadTexture(Sun);
+    gMoonTexture = LoadTexture(Moon);
+    gVerityTexture = LoadTexture(Verity);
 
-    // Ask raylib to aim for this many frames per second; update() still uses elapsed time
-    // so the animation speed does not depend on hitting this exact frame rate.
     SetTargetFPS(FPS);
 }
 
-// Read player/window input. This example only checks whether the window should close.
 void processInput()
 {
-    // WindowShouldClose() is raylib's standard close/quit check.
-    // Changing the status makes the while loop in main() stop on its next check.
     if (WindowShouldClose())
         gAppStatus = TERMINATED;
 }
 
-// Advance the animation state. This function changes values but does not draw anything.
 void update()
 {
-
-    // GetTime() returns seconds since the program started.
     float ticks = static_cast<float>(GetTime());
 
-    // Delta time is the time elapsed since the previous update, in seconds.
-    // Using it makes motion time-based instead of moving a fixed amount per frame.
     float deltaTime = ticks - gPrevTicks;
 
-    // Save this frame's time so the next update can calculate its own delta time.
     gPrevTicks = ticks;
 
-    // Advance the animation phase at 5 radians per second (5 * seconds elapsed).
-    gPulseTime += 5.0f * deltaTime;
+    gSunPulseTime += 5.0f * deltaTime;
+    gMoonPulseTime += 5.0f * deltaTime;
+    gVerityPulseTime += 5.0f * deltaTime;
 
-    // Cosine smoothly moves between -1 and +1. Multiplying by MAX_AMP makes
-    // the sprite vary by up to 100 pixels around its 500-pixel base size.
-    // Applying the same calculation to x and y keeps the sprite's proportions square.
-    gScale = {
-        BASE_SIZE.x + MAX_AMP * cos(gPulseTime),
-        BASE_SIZE.y + MAX_AMP * cos(gPulseTime)};
+    gSunScale = {
+        BASE_SIZE.x + MAX_AMP * cos(gSunPulseTime),
+        BASE_SIZE.y + MAX_AMP * cos(gSunPulseTime)};
+
+    gMoonScale = {
+        BASE_SIZE.x + MAX_AMP * cos(gMoonPulseTime),
+        BASE_SIZE.y + MAX_AMP * cos(gMoonPulseTime)};
+
+    gVerityScale = {
+        BASE_SIZE.x + MAX_AMP * cos(gVerityPulseTime),
+        BASE_SIZE.y + MAX_AMP * cos(gVerityPulseTime)};
 }
 
 void render()
 {
-    // Begin a frame. Raylib collects the drawing commands until EndDrawing().
     BeginDrawing();
 
-    // Clear the previous frame so old pixels do not remain behind the new drawing.
     ClearBackground(ColorFromHex(BG_COLOUR));
 
-    // This source rectangle selects which part of the loaded image to use.
-    // Starting at (0, 0) and using the texture's full width and height selects all of it.
-    Rectangle textureArea = {
+    // Rectangle areas where the images will appear.
+    Rectangle textureSunArea = {
         0.0f, 0.0f,
-        static_cast<float>(gTexture.width),
-        static_cast<float>(gTexture.height)};
+        static_cast<float>(gSunTexture.width),
+        static_cast<float>(gSunTexture.height)};
 
-    // This destination rectangle says where and how large the selected image should appear.
-    // gPosition is the rectangle's anchor position; gScale supplies its current dimensions.
-    Rectangle destinationArea = {
-        gPosition.x,
-        gPosition.y,
+    Rectangle textureMoonArea = {
+        0.0f, 0.0f,
+        static_cast<float>(gMoonTexture.width),
+        static_cast<float>(gMoonTexture.height)};
 
-        static_cast<float>(gScale.x),
-        static_cast<float>(gScale.y)};
+    Rectangle textureVerityArea = {
+        0.0f, 0.0f,
+        static_cast<float>(gVerityTexture.width),
+        static_cast<float>(gVerityTexture.height)};
 
-    // DrawTexturePro() positions the destination rectangle relative to an origin offset.
-    // Half the width and height makes that origin its center, so the sprite pulses around
-    // gPosition instead of appearing to grow only down and to the right.
+    Rectangle destinationSunArea = {
+        gSunPosition.x,
+        gSunPosition.y,
+
+        static_cast<float>(gSunScale.x),
+        static_cast<float>(gSunScale.y)};
+
+    Rectangle destinationMoonArea = {
+        gMoonPosition.x,
+        gMoonPosition.y,
+
+        static_cast<float>(gMoonScale.x),
+        static_cast<float>(gMoonScale.y)};
+
+    Rectangle destinationVerityArea = {
+        gVerityPosition.x,
+        gVerityPosition.y,
+
+        static_cast<float>(gVerityScale.x),
+        static_cast<float>(gVerityScale.y)};
+
     Vector2 originOffset = {
-        static_cast<float>(gScale.x) / 2.0f,
-        static_cast<float>(gScale.y) / 2.0f};
+        static_cast<float>(gSunScale.x) / 2.0f,
+        static_cast<float>(gSunScale.y) / 2.0f};
 
-    // Draw the texture: source area, destination area, center offset, rotation, and tint color.
-    // WHITE means no color tint is applied to the original image.
+    // Draw the images onto the screen
+
     DrawTexturePro(
-        gTexture,
-        textureArea,
-        destinationArea,
+        gSunTexture,
+        textureSunArea,
+        destinationSunArea,
         originOffset,
-        gAngle,
+        gSunAngle,
         WHITE);
 
-    // Finish presenting this frame and let raylib apply frame timing as needed.
+    DrawTexturePro(
+        gMoonTexture,
+        textureMoonArea,
+        destinationMoonArea,
+        originOffset,
+        gMoonAngle,
+        WHITE);
+
+    DrawTexturePro(
+        gVerityTexture,
+        textureVerityArea,
+        destinationVerityArea,
+        originOffset,
+        gVerityAngle,
+        WHITE);
+
     EndDrawing();
 }
 
-// Release resources when the game loop has ended.
 void shutdown()
 {
-    // Close the raylib window and release the loaded image texture.
     CloseWindow();
-    UnloadTexture(gTexture);
+    UnloadTexture(gSunTexture);
+    UnloadTexture(gMoonTexture);
+    UnloadTexture(gVerityTexture);
 }
 
-// The program starts here. int main(void) means main takes no arguments and returns an integer.
 int main(void)
 {
-    // Create the window and load the texture before any update or drawing calls.
     initialise();
 
-    // The game loop repeats input, update, and render while the app is still running.
-    // This repeated cycle is the basic structure used by many real-time games.
     while (gAppStatus == RUNNING)
     {
-        // Handle events first, then update the game's state, then draw that state.
         processInput();
         update();
         render();
     }
 
-    // Clean up after the loop so resources are not left allocated.
     shutdown();
 
-    // Return 0 to tell the operating system the program finished successfully.
     return 0;
 }
