@@ -50,7 +50,7 @@ constexpr char Verity[] = "assets/verity.png";
 Vector2 ORIGIN = {SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f};
 
 // The texture starts at this width and height, measured in screen pixels when drawn.
-constexpr Vector2 BASE_SIZE = {500.0f, 500.0f};
+constexpr Vector2 BASE_SIZE = {400.0f, 400.0f};
 
 // Sun Texture Info
 // Texture2D stores the image data raylib needs to draw a texture.
@@ -74,6 +74,10 @@ Vector2 gVerityScale = {150.0f, 150.0f};
 float gVerityAngle = 0.0f;
 float gVerityPulseTime = 0.0f;
 
+// Background Texture Info
+constexpr char Background[] = "assets/space background.png";
+Texture2D gBackgroundTexture;
+
 float MAX_AMP = 100.0f;
 
 float gPrevTicks = 0.0f;
@@ -91,6 +95,7 @@ void initialise()
     gSunTexture = LoadTexture(Sun);
     gMoonTexture = LoadTexture(Moon);
     gVerityTexture = LoadTexture(Verity);
+    gBackgroundTexture = LoadTexture(Background);
 
     SetTargetFPS(FPS);
 }
@@ -177,6 +182,16 @@ void render()
         static_cast<float>(gVerityScale.x),
         static_cast<float>(gVerityScale.y)};
 
+    Rectangle textureBackgroundArea = {
+        0.0f, 0.0f,
+        static_cast<float>(gBackgroundTexture.width),
+        static_cast<float>(gBackgroundTexture.height)};
+
+    Rectangle destinationBackgroundArea = {
+        0.0f, 0.0f,
+        static_cast<float>(SCREEN_WIDTH),
+        static_cast<float>(SCREEN_HEIGHT)};
+
     Vector2 originSunOffset = {
         static_cast<float>(gSunScale.x) / 2.0f,
         static_cast<float>(gSunScale.y) / 2.0f};
@@ -190,7 +205,15 @@ void render()
         static_cast<float>(gVerityScale.y) / 2.0f};
 
     // Draw the images onto the screen
-    
+
+    DrawTexturePro(
+        gBackgroundTexture,
+        textureBackgroundArea,
+        destinationBackgroundArea,
+        {0.0f, 0.0f},
+        0.0f,
+        WHITE);
+
     DrawTexturePro(
         gVerityTexture,
         textureVerityArea,
@@ -224,6 +247,7 @@ void shutdown()
     UnloadTexture(gSunTexture);
     UnloadTexture(gMoonTexture);
     UnloadTexture(gVerityTexture);
+    UnloadTexture(gBackgroundTexture);
 }
 
 int main(void)
