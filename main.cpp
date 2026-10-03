@@ -78,6 +78,10 @@ float gVerityPulseTime = 0.0f;
 constexpr char Background[] = "assets/space background.png";
 Texture2D gBackgroundTexture;
 
+// Background Tint Color Change Info
+float gBackgroundTintTime = 0.0f;
+Color gBackgroundTint = WHITE;
+
 float MAX_AMP = 100.0f;
 
 float gPrevTicks = 0.0f;
@@ -117,6 +121,14 @@ void update()
     gSunPulseTime += 2.0f * deltaTime;
     gMoonPulseTime += 3.0f * deltaTime;
     gVerityPulseTime += 3.0f * deltaTime;
+    gBackgroundTintTime += deltaTime;
+
+    // Chaning the tint of the background in the pattern.
+    gBackgroundTint = {
+        static_cast<unsigned char>(170.0f + 85.0f * (0.5f + 0.5f * sin(gBackgroundTintTime))),
+        static_cast<unsigned char>(170.0f + 85.0f * (0.5f + 0.5f * sin(gBackgroundTintTime + 2.0f))),
+        static_cast<unsigned char>(170.0f + 85.0f * (0.5f + 0.5f * sin(gBackgroundTintTime + 4.0f))),
+        255};
 
     // Sun Pulsing Affect
     gSunScale = {
@@ -212,7 +224,7 @@ void render()
         destinationBackgroundArea,
         {0.0f, 0.0f},
         0.0f,
-        WHITE);
+        gBackgroundTint);
 
     DrawTexturePro(
         gVerityTexture,
